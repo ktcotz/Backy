@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { data, ReportType } from './data';
-import { createReportDTO, updateReportTDO } from './app.dto';
+import { createReportTDO, updateReportTDO } from './app.dto';
 import { v4 as uuid } from 'uuid';
 
 @Injectable()
@@ -26,7 +26,7 @@ export class AppService {
     return report;
   }
 
-  createReport(type: ReportType, createReportDTO: createReportDTO) {
+  createReport(type: ReportType, createReportDTO: createReportTDO) {
     const newReport = {
       id: uuid(),
       ...createReportDTO,
