@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ReportType } from './data';
-import { CreateReportDTO, UpdateReportDTO } from './app.dto';
+import { CreateReportDTO, ReportResponse, UpdateReportDTO } from './app.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('report/:type')
@@ -23,7 +23,7 @@ export class AppController {
   @Get('')
   getAllReports(
     @Param('type', new ParseEnumPipe(ReportType)) type: ReportType,
-  ) {
+  ): ReportResponse[] {
     return this.appService.getAllReports(type);
   }
 
@@ -31,7 +31,7 @@ export class AppController {
   getIncomeReport(
     @Param('id', ParseUUIDPipe) id: string,
     @Param('type', new ParseEnumPipe(ReportType)) type: ReportType,
-  ) {
+  ): ReportResponse | null {
     return this.appService.getIncomeReport(id, type);
   }
 
@@ -39,7 +39,7 @@ export class AppController {
   createReport(
     @Param('type', new ParseEnumPipe(ReportType)) type: ReportType,
     @Body() createReportDTO: CreateReportDTO,
-  ) {
+  ): ReportResponse {
     return this.appService.createReport(type, createReportDTO);
   }
 
@@ -48,13 +48,13 @@ export class AppController {
     @Param('type', new ParseEnumPipe(ReportType)) type: ReportType,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateDTO: UpdateReportDTO,
-  ) {
+  ): ReportResponse[] | null {
     return this.appService.updateReport(type, id, updateDTO);
   }
 
   @HttpCode(204)
   @Delete(':id')
-  deleteReport(@Param('id', ParseUUIDPipe) id: string) {
+  deleteReport(@Param('id', ParseUUIDPipe) id: string): ReportResponse | null {
     return this.appService.deleteReport(id);
   }
 }

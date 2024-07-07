@@ -1,32 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { data, ReportType } from './data';
-import { CreateReportDTO, UpdateReportDTO } from './app.dto';
+import { CreateReportDTO, ReportResponse, UpdateReportDTO } from './app.dto';
 import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class AppService {
-  getAllReports(type: ReportType) {
+  getAllReports(type: ReportType): ReportResponse[] {
     const reports = data.reports.filter((report) => report.type === type);
 
-    return {
-      type,
-      reports,
-    };
+    return reports;
   }
 
-  getIncomeReport(id: string, type: ReportType) {
+  getIncomeReport(id: string, type: ReportType): ReportResponse | null {
     const typeReports = data.reports.filter((report) => report.type === type);
 
     const report = typeReports.find((report) => report.id === id);
 
     if (!report) {
-      return [];
+      return null;
     }
 
-    return report;
+    return new ReportResponse(report);
   }
 
-  createReport(type: ReportType, createReportDTO: CreateReportDTO) {
+  createReport(
+    type: ReportType,
+    createReportDTO: CreateReportDTO,
+  ): ReportResponse {
     const newReport = {
       id: uuid(),
       ...createReportDTO,
@@ -40,13 +40,17 @@ export class AppService {
     return newReport;
   }
   UpdateReportDTO;
-  updateReport(type: ReportType, id: string, updateTDO: UpdateReportDTO) {
+  updateReport(
+    type: ReportType,
+    id: string,
+    updateTDO: UpdateReportDTO,
+  ): ReportResponse[] | null {
     const typeReports = data.reports.filter((report) => report.type === type);
 
     const report = typeReports.find((report) => report.id === id);
 
     if (!report) {
-      return [];
+      return null;
     }
 
     data.reports = data.reports.map((report) =>
@@ -56,10 +60,10 @@ export class AppService {
     return data.reports;
   }
 
-  deleteReport(id: string) {
+  deleteReport(id: string): ReportResponse | null {
     const report = data.reports.find((report) => report.id === id);
 
-    if (!report) return [];
+    if (!report) return null;
 
     data.reports = data.reports.filter((report) => report.id !== id);
 
