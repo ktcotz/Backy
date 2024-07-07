@@ -3,14 +3,14 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
   Post,
   Put,
 } from '@nestjs/common';
 import { AppService } from './app.service';
-import { data, ReportType } from './data';
+import { ReportType } from './data';
 import { createReportDTO, updateReportTDO } from './app.dto';
-import { v4 as uuid } from 'uuid';
 
 @Controller('report/:type')
 export class AppController {
@@ -18,25 +18,12 @@ export class AppController {
 
   @Get('')
   getAllReports(@Param('type') type: ReportType) {
-    const reports = data.reports.filter((report) => report.type === type);
-
-    return {
-      type,
-      reports,
-    };
+    return this.appService.getAllReports(type);
   }
 
   @Get(':id')
   getIncomeReport(@Param('id') id: string, @Param('type') type: ReportType) {
-    const typeReports = data.reports.filter((report) => report.type === type);
-
-    const report = typeReports.find((report) => report.id === id);
-
-    if (!report) {
-      return [];
-    }
-
-    return report;
+    return this.appService.getIncomeReport(id, type);
   }
 
   @Post()
@@ -44,17 +31,7 @@ export class AppController {
     @Param('type') type: ReportType,
     @Body() createReportDTO: createReportDTO,
   ) {
-    const newReport = {
-      id: uuid(),
-      ...createReportDTO,
-      created_at: new Date(),
-      updated_at: new Date(),
-      type,
-    };
-
-    data.reports.push(newReport);
-
-    return newReport;
+    return this.appService.createReport(type, createReportDTO);
   }
 
   @Put(':id')
@@ -63,29 +40,12 @@ export class AppController {
     @Param('id') id: string,
     @Body() updateDTO: updateReportTDO,
   ) {
-    const typeReports = data.reports.filter((report) => report.type === type);
-
-    const report = typeReports.find((report) => report.id === id);
-
-    if (!report) {
-      return [];
-    }
-
-    data.reports = data.reports.map((report) =>
-      report.id === id ? { ...report, ...updateDTO } : report,
-    );
-
-    return data.reports;
+    return this.appService.updateReport(type, id, updateDTO);
   }
 
+  @HttpCode(204)
   @Delete(':id')
   deleteReport(@Param('id') id: string) {
-    const report = data.reports.find((report) => report.id === id);
-
-    if (!report) return [];
-
-    data.reports = data.reports.filter((report) => report.id !== id);
-
-    return report;
+    return this.appService.deleteReport(id);
   }
 }
