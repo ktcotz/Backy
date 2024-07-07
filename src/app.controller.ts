@@ -9,18 +9,14 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
-  UsePipes,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ReportType } from './data';
-import {
-  createReportSchema,
-  createReportTDO,
-  updateReportTDO,
-} from './app.dto';
-import { ZodValidationPipe } from './validation/validation.pipe';
+import { CreateReportDTO, UpdateReportDTO } from './app.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('report/:type')
+@ApiTags('expenses')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
@@ -40,10 +36,9 @@ export class AppController {
   }
 
   @Post()
-  @UsePipes(new ZodValidationPipe(createReportSchema))
   createReport(
     @Param('type', new ParseEnumPipe(ReportType)) type: ReportType,
-    @Body() createReportDTO: createReportTDO,
+    @Body() createReportDTO: CreateReportDTO,
   ) {
     return this.appService.createReport(type, createReportDTO);
   }
@@ -52,7 +47,7 @@ export class AppController {
   updateReport(
     @Param('type', new ParseEnumPipe(ReportType)) type: ReportType,
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() updateDTO: updateReportTDO,
+    @Body() updateDTO: UpdateReportDTO,
   ) {
     return this.appService.updateReport(type, id, updateDTO);
   }

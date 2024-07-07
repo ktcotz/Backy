@@ -1,10 +1,3 @@
-import { z } from 'zod';
+export class CreateReportDTO {}
 
-export const createReportSchema = z.object({
-  source: z.string(),
-  amount: z.number(),
-});
-
-export type createReportTDO = z.infer<typeof createReportSchema>;
-
-export type updateReportTDO = Partial<createReportTDO>;
+export class UpdateReportDTO {}
