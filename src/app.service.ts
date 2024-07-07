@@ -33,7 +33,7 @@ export class AppService {
       created_at: new Date(),
       updated_at: new Date(),
       type,
-    } as any;
+    };
 
     data.reports.push(newReport);
 
