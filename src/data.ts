@@ -27,7 +27,7 @@ export const data: Data = {
       type: ReportType.INCOME,
     },
     {
-      id: 'uuid',
+      id: 'uuid1',
       source: 'Food',
       amount: 2000,
       created_at: new Date(),
