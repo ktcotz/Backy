@@ -6,7 +6,7 @@ import {
   IsPositive,
   IsString,
 } from 'class-validator';
-import { ReportType } from './data';
+import { ReportType } from './../../data';
 
 import { Exclude } from 'class-transformer';
 

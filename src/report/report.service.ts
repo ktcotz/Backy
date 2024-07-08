@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { data, ReportType } from './data';
-import { CreateReportDTO, ReportResponse, UpdateReportDTO } from './app.dto';
+import { data, ReportType } from './../data';
+import {
+  CreateReportDTO,
+  ReportResponse,
+  UpdateReportDTO,
+} from './dto/report.dto';
 import { v4 as uuid } from 'uuid';
 
 @Injectable()
-export class AppService {
+export class ReportService {
   getAllReports(type: ReportType): ReportResponse[] {
     const reports = data.reports.filter((report) => report.type === type);
 

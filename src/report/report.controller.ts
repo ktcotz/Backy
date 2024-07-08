@@ -10,21 +10,25 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { AppService } from './app.service';
-import { ReportType } from './data';
-import { CreateReportDTO, ReportResponse, UpdateReportDTO } from './app.dto';
+import { ReportType } from './../data';
+import {
+  CreateReportDTO,
+  ReportResponse,
+  UpdateReportDTO,
+} from './dto/report.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { ReportService } from './report.service';
 
 @Controller('report/:type')
 @ApiTags('expenses')
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+export class ReportController {
+  constructor(private readonly reportService: ReportService) {}
 
   @Get('')
   getAllReports(
     @Param('type', new ParseEnumPipe(ReportType)) type: ReportType,
   ): ReportResponse[] {
-    return this.appService.getAllReports(type);
+    return this.reportService.getAllReports(type);
   }
 
   @Get(':id')
@@ -32,7 +36,7 @@ export class AppController {
     @Param('id', ParseUUIDPipe) id: string,
     @Param('type', new ParseEnumPipe(ReportType)) type: ReportType,
   ): ReportResponse | null {
-    return this.appService.getIncomeReport(id, type);
+    return this.reportService.getIncomeReport(id, type);
   }
 
   @Post()
@@ -40,7 +44,7 @@ export class AppController {
     @Param('type', new ParseEnumPipe(ReportType)) type: ReportType,
     @Body() createReportDTO: CreateReportDTO,
   ): ReportResponse {
-    return this.appService.createReport(type, createReportDTO);
+    return this.reportService.createReport(type, createReportDTO);
   }
 
   @Put(':id')
@@ -49,12 +53,12 @@ export class AppController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateDTO: UpdateReportDTO,
   ): ReportResponse[] | null {
-    return this.appService.updateReport(type, id, updateDTO);
+    return this.reportService.updateReport(type, id, updateDTO);
   }
 
   @HttpCode(204)
   @Delete(':id')
   deleteReport(@Param('id', ParseUUIDPipe) id: string): ReportResponse | null {
-    return this.appService.deleteReport(id);
+    return this.reportService.deleteReport(id);
   }
 }
