@@ -40,3 +40,19 @@ export class SignupDTO {
   })
   password: string;
 }
+
+export class SignInDTO {
+  @IsEmail()
+  @ApiProperty({
+    example: 'kam.nas21@wp.pl',
+    required: true,
+  })
+  email: string;
+
+  @IsString()
+  @ApiProperty({
+    example: '123456',
+    required: true,
+  })
+  password: string;
+}
